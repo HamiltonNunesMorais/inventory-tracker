@@ -1,0 +1,5 @@
+timestamp,product_id,product_name,type,quantity
+1710000000,A1,Widget,in,50
+1710000100,B2,Gadget,in,30
+1710000200,A1,Widget,out,5
+1710000300,B2,Gadget,out,8

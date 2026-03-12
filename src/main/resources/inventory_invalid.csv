@@ -1,0 +1,3 @@
+timestamp,product_id,product_name,type,quantity
+1710000000,F6,Broken,in,10
+1710000100,F6,Broken,wrongtype,5

@@ -1,0 +1,16 @@
+{
+  "stock": [
+    { "productId": "A1", "productName": "Widget", "quantity": 45 },
+    { "productId": "B2", "productName": "Gadget", "quantity": 22 },
+    { "productId": "C3", "productName": "Doohickey", "quantity": 15 },
+    { "productId": "D4", "productName": "Thingamajig", "quantity": 15 },
+    { "productId": "E5", "productName": "Whatsit", "quantity": 5 }
+  ],
+  "lowStock": [
+    { "productId": "E5", "productName": "Whatsit", "quantity": 5 }
+  ],
+  "anomalies": [
+    { "productId": "F6", "productName": "Broken", "message": "Invalid row skipped" },
+    { "productId": "G7", "productName": "Gizmo", "message": "Invalid row skipped" }
+  ]
+}

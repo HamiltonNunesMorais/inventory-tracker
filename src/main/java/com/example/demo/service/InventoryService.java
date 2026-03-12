@@ -1,6 +1,8 @@
 
 // lógica de negócio: parsing, cálculo de estoque, detecção de low stock e anomalies
 package com.example.demo.service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.example.demo.dto.InventoryResponse;
 import com.example.demo.model.*;
@@ -17,21 +19,45 @@ import java.util.*;
 
 @Service
 public class InventoryService {
+    private static final Logger logger = LoggerFactory.getLogger(InventoryService.class);
+
 
     public InventoryResponse analyzeInventory(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            logger.error("Arquivo inválido recebido para análise");
+            throw new IllegalArgumentException("Arquivo não pode ser vazio");
+        }
+
         List<InventoryMovement> movements = parseCsv(file);
+        logger.info("Total de movimentações carregadas: {}", movements.size());
 
         // Ordenar por timestamp
         movements.sort(Comparator.comparingLong(InventoryMovement::getTimestamp));
+        logger.info("Movimentações ordenadas por timestamp");
 
         // Calcular estoque
         Map<String, ProductStock> stockMap = calculateStock(movements);
+        logger.info("Estoque calculado: {} produtos distintos", stockMap.size());
+        for (ProductStock stock : stockMap.values()) {
+            logger.debug("Produto {} - {} unidades", stock.getProductId(), stock.getQuantity());
+        }
 
         // Identificar estoque baixo
         List<LowStock> lowStockList = findLowStock(stockMap);
+        if (!lowStockList.isEmpty()) {
+            for (LowStock low : lowStockList) {
+                logger.warn("Produto {} com estoque baixo: {} unidades", low.getProductId(), low.getQuantity());
+            }
+        }
+
 
         // Detectar anomalias
         List<Anomaly> anomalies = detectAnomalies(movements, stockMap);
+        if (!anomalies.isEmpty()) {
+            for (Anomaly anomaly : anomalies) {
+                logger.error("Anomalia detectada no produto {}: {}", anomaly.getProductId(), anomaly.getMessage());
+            }
+        }
 
         // Montar resposta
         return new InventoryResponse(
